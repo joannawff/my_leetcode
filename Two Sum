@@ -1,0 +1,45 @@
+Question:
+Given an array of integers, return indices of the two numbers such that they add up to a specific target.
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+Example:
+Given nums = [2, 7, 11, 15], target = 9,
+Because nums[0] + nums[1] = 2 + 7 = 9,
+return [0, 1]
+
+Solution:
+1. O(N²)，Your runtime beats 11.38% of cpp submissions.
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> result;
+        for (int i = 0; i < nums.size()-1; i++) {
+            for (int j = i + 1; j < nums.size(); j++) {
+                if (nums[i] + nums[j] == target) {
+                    result.push_back(i);
+                    result.push_back(j);
+                }
+            }
+        }
+        return result;
+    }
+};
+
+2:O(N), Your runtime beats 72.77% of cpp submissions.
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        map<int, int> hash;
+        vector<int> result;
+        for (int i = 0; i < nums.size(); i++) {
+            int number = target - nums[i];
+            if (hash.find(number) != hash.end()) {
+                result.push_back(hash[number]);
+                result.push_back(i);
+                return result;
+            }
+            hash[nums[i]] = i;
+        }
+    }
+};
+
+方案2明显好得多，利用map建立值与位置的key-value对，可通过find来直接查找位置，1次循环即可，避免了方案1的双层循环操作。
