@@ -1,0 +1,101 @@
+Question:
+Given a List of words, return the words that can be typed using letters of alphabet on only one row's of American keyboard like the image below.
+Example 1:
+Input: ["Hello", "Alaska", "Dad", "Peace"]
+Output: ["Alaska", "Dad"]
+
+Solution:
+解决方案中的三种方法在时间上效果一样。。。。
+1. 3ms, Your runtime beats 2.19% of cpp submissions.
+思路：3行字母放在3个set里，依次查询每个单词，找到单词每个字母对应的行，都在同一行的才保存到result中。
+缺点：单词的每个字母都查询了，其实只要查到与前面不同的即可放弃该单词。
+class Solution {
+public:
+    vector<string> findWords(vector<string>& words) {
+        vector<string> result;
+        map<char, int> dict;
+        set<char> set1 = {'q','w','e','r','t','y','u','i','o','p'};
+        set<char> set2 = {'a','s','d','f','g','h','j','k','l'};
+        set<char> set3 = {'z','x','c','v','b','n','m'};
+        for (int i = 0; i < words.size(); i++) {
+            size_t offset = 0;
+            int flag1 = 0;
+            int flag2 = 0;
+            int flag3 = 0;
+            while (offset < words[i].length()) { 
+                if (set1.find((char)tolower(words[i][offset])) != set1.end()) 
+                    flag1 = 1;
+                else
+                    if (set2.find((char)tolower(words[i][offset])) != set2.end())
+                        flag2 = 1;              
+                    else
+                        flag3 = 1;
+                offset++;
+            }
+            if ((flag1 + flag2 + flag3) == 1) 
+                result.push_back(words[i]);
+        }
+        return result;   
+    }
+};
+2. 3ms, Your runtime beats 2.19% of cpp submissions.
+class Solution {
+public:
+    vector<string> findWords(vector<string>& words) {
+        vector<string> result;
+        set<char> set1 = {'q','w','e','r','t','y','u','i','o','p'};
+        set<char> set2 = {'a','s','d','f','g','h','j','k','l'};
+        set<char> set3 = {'z','x','c','v','b','n','m'};
+        vector<set<char>> totalset {set1, set2, set3};
+        
+        for (int i = 0; i < words.size(); i++) {
+            int row = 0;
+            for (int j = 0; j < totalset.size(); j++) {
+                if (totalset[j].find((char)tolower(words[i][0])) != totalset[j].end()) {
+                    row = j;
+                    break;
+                }
+            }
+            int flag = 1;
+            for (int offset =1; offset < words[i].length(); offset++) {
+                if (totalset[row].find((char)tolower(words[i][offset])) == totalset[row].end()) {
+                    flag = 0;
+                    break;
+                }
+            }
+            if (flag) 
+                result.push_back(words[i]);
+        }
+        return result;   
+    }
+};
+3. 3ms, Your runtime beats 2.19% of cpp submissions.
+class Solution {
+public:
+    vector<string> findWords(vector<string>& words) {
+        unordered_set<char> row1 {'q', 'w', 'e', 'r', 't', 'y','u', 'i', 'o', 'p'};
+        unordered_set<char> row2 {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'}; 
+        unordered_set<char> row3 { 'z', 'x', 'c', 'v', 'b' ,'n', 'm'};
+        vector<unordered_set<char>> rows {row1, row2, row3};
+        
+        
+        vector<string> validWords;
+        for(int i=0; i<words.size(); ++i){
+            int row=0;
+            
+            for(int k=0; k<3; ++k){
+                if(rows[k].count((char)tolower(words[i][0])) > 0) row = k;
+            }
+            
+            validWords.push_back(words[i]);
+            for(int j=1; j<words[i].size(); ++j){
+                if(rows[row].count((char)tolower(words[i][j])) == 0){
+                    validWords.pop_back();
+                    break;
+                }
+            }
+            
+        }
+        return validWords;   
+    }
+};
