@@ -1,0 +1,48 @@
+Given two arrays, write a function to compute their intersection.
+Example:
+Given nums1 = [1, 2, 2, 1], nums2 = [2, 2], return [2, 2].
+Note:
+Each element in the result should appear as many times as it shows in both arrays.
+The result can be in any order.
+############################
+C++：
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> um;
+        vector<int> res;
+        for (int i = 0; i < nums1.size(); i++) um[nums1[i]]++;
+        for (int j = 0; j < nums2.size(); j++) {
+            if (--um[nums2[j]] >= 0) res.push_back(nums2[j]);
+        }
+        return res;
+    }
+};
+###################################
+Python：
+import collections
+class Solution(object):
+    def intersect(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        dict1 = collections.defaultdict(int)
+        dict2 = collections.defaultdict(int)
+        result = []
+        for i in nums1:
+            dict1[i] += 1
+        for j in nums2:
+            dict2[j] += 1
+        for k in dict1:
+            if k not in dict2:
+                continue
+            if dict1[k] < dict2[k]:
+                min = dict1[k]
+            else:
+                min = dict2[k]
+            result.extend([k]*min)
+        return result
+            
+        
