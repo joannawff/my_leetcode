@@ -9,8 +9,6 @@ canConstruct("aa", "aab") -> true
 class Solution {
 public:
     bool canConstruct(string ransomNote, string magazine) {
-        pair<int, int> pp_r[26];
-        pair<int, int> pp_m[26];
         vector<int> vc_r(26,0);
         vector<int> vc_m(26,0);
         for (int i = 0; i < ransomNote.size(); i++) {
